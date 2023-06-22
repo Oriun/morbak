@@ -11,6 +11,7 @@ app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
 });
 app.get("/index.js", (req, res) => {
+  res.setHeader("Content-Type", "application/javascript")
   res.sendFile(__dirname + "/index.js");
 });
 
