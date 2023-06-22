@@ -33,6 +33,6 @@ io.on("connection", (socket) => {
   });
 });
 
-app.listen(4000, "0.0.0.0", () => {
+server.listen(4000, "0.0.0.0", () => {
   console.log("listening on *:4000");
 });
