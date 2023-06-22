@@ -1,7 +1,8 @@
-window.addEventListeneur("error",err => alert (err.message))
-// import { io } from "https://cdn.socket.io/4.4.1/socket.socket.esm.min.js";
+// localStorage.morbakId = localStorage.morbakId || crypto.randomUUID();
 
-const socket = io("ws://10.73.190.162:25565");
+console.log(localStorage.morbakId);
+
+const socket = io();
 socket.emit("join", "game");
 const size = 4;
 const history = [];
