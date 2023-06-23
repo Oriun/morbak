@@ -1,13 +1,30 @@
-FROM node:20
+FROM node:20-alpine as CLIENT
+
+WORKDIR /app
+
+RUN npm install -g pnpm
+
+COPY app/package.json ./
+
+COPY app/pnpm-lock.yaml ./
+
+RUN pnpm i --frozen-lockfile
+
+COPY app ./
+
+RUN pnpm build
+
+FROM node:20-alpine as SERVER
 
 # Create app directory
 WORKDIR /morbak
 
 # Install app dependencies
 RUN npm install -g pnpm
-COPY package.json ./
-COPY pnpm-lock.yaml ./
 
+COPY package.json ./
+
+COPY pnpm-lock.yaml ./
 
 RUN pnpm i --frozen-lockfile
 
@@ -17,13 +34,7 @@ COPY . .
 
 RUN pnpm build
 
-WORKDIR /morbak/app
-
-RUN pnpm i --frozen-lockfile
-
-RUN pnpm build
-
-WORKDIR /morbak
+COPY --from=CLIENT /app/dist app/dist
 
 EXPOSE 4000
 
