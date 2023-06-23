@@ -19,6 +19,7 @@
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "nanoid": "^4.0.2",
+    "rxjs": "^7.8.1",
     "socket.io": "^4.7.0",
     "tailwind-merge": "^1.13.2",
     "ts-node": "^10.9.1",
