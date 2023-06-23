@@ -97,3 +97,10 @@ export async function kickUser(id: string) {
     throw new Error("Can't kick user");
   }
 }
+
+export async function startGame() {
+  const res = await ask("start")();
+  if (!res || errors.includes(res) || res !== "success") {
+    throw new Error("Can't start game");
+  }
+}

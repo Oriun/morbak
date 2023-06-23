@@ -46,6 +46,8 @@ export async function kick(socket: Socket, userId: string, kickUserId: string) {
     })
 
     socket.emit("kick", "success");
-    socket.broadcast.to(room.id).emit("user-kicked", JSON.stringify(kickUser));
+    socket.to(room.id).emit("user-kicked", JSON.stringify(kickUser));
+    socket.emit("user-kicked", JSON.stringify(kickUser));
+    await socket.leave(room.id);
 
 }

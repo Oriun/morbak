@@ -63,6 +63,10 @@ export function userKicked({ update, toast }: IListenerProps) {
     update((state) => {
       const newState = structuredClone(state);
       newState.users = newState.users.filter((u) => u.id !== user.id);
+      if (user.id === state.user?.id) {
+        newState.user = user;
+        newState.room = null;
+      }
       if (!newState.room) return newState;
       newState.room = {
         ...newState.room,
@@ -79,7 +83,7 @@ export function userKicked({ update, toast }: IListenerProps) {
   };
 }
 
-export function userUpdated({ update }: IListenerProps) {
+export function userUpdated({ update, state }: IListenerProps) {
   return function (data: string) {
     console.log("user-update", data);
     const user = JSON.parse(data) as User;
@@ -89,6 +93,10 @@ export function userUpdated({ update }: IListenerProps) {
         if (u.id === user.id) return user;
         return u;
       });
+      if (!newState.room) return newState;
+      if (user.id === state.user?.id) {
+        newState.user = user;
+      }
       return newState;
     });
   };

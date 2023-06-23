@@ -9,7 +9,7 @@ import {
 } from "react";
 import { useToast } from "@chakra-ui/react";
 import { getMyself, getUserById, recover } from "@/services/functions";
-import { userJoined, userLeft, userUpdated } from "@/services/listeners";
+import { userJoined, userKicked, userLeft, userUpdated } from "@/services/listeners";
 
 export type User = {
   id: string;
@@ -20,7 +20,7 @@ export type User = {
 export type Room = {
   id: string;
   timer: number;
-  size: string;
+  size: [number, number];
   winLength: number;
   players: {
     userId: string;
@@ -130,15 +130,18 @@ export const Provider: React.FC<{
     const joinListener = userJoined(ctx);
     const removeUser = userLeft(ctx);
     const updateUser = userUpdated(ctx);
+    const kickListener = userKicked(ctx);
 
     socket.on("user-joined", joinListener);
     socket.on("user-left", removeUser);
     socket.on("user-update", updateUser);
+    socket.on("user-kicked", kickListener);
 
     return () => {
       socket.off("user-joined", joinListener);
       socket.off("user-left", removeUser);
       socket.off("user-update", updateUser);
+      socket.off("user-kicked", kickListener);
     };
   }, [state, toast, update]);
 

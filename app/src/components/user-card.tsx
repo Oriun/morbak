@@ -41,14 +41,13 @@ const UserCard: React.FunctionComponent<IUSerCardProps> = ({
         className="w-8 h-8 rounded-full border-solid border border-white shrink-0"
       />
       <span className="grow">{name}</span>
-      {canKick+''}
       {owner && (
         <span className="py-1 px-2 bg-caribbean-current text-white rounded-md text-xs font-semibold">
           OWNER
         </span>
       )}
       {canKick && (
-        <Button className="text-xs hidden group-hover:flex px-2 py-1 rounded-md bg-rusty-red" onClick={handleKick}>
+        <Button className="text-xs text-white hidden group-hover:flex px-2 py-1 rounded-md bg-rusty-red" onClick={handleKick}>
           Kick
         </Button>
       )}
