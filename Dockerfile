@@ -1,7 +1,7 @@
-FROM node:20-alpine
+FROM node:20
 
 # Create app directory
-WORKDIR /app
+WORKDIR /morbak
 
 # Install app dependencies
 RUN npm install -g pnpm
@@ -17,13 +17,13 @@ COPY . .
 
 RUN pnpm build
 
-RUN cd /app/app
+WORKDIR /morbak/app
 
 RUN pnpm i --frozen-lockfile
 
 RUN pnpm build
 
-WORKDIR /app
+WORKDIR /morbak
 
 EXPOSE 4000
 
