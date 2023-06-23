@@ -4,24 +4,27 @@ FROM node:20-alpine
 WORKDIR /app
 
 # Install app dependencies
-COPY package*.json ./
+RUN npm install -g pnpm
+COPY package.json ./
+COPY pnpm-lock.yaml ./
 
-RUN npm install
+
+RUN pnpm i --frozen-lockfile
 
 # Bundle app source
 
 COPY . .
 
-RUN npm run build
+RUN pnpm build
 
-WORKDIR /app/app
+RUN cd /app/app
 
-RUN npm install
+RUN pnpm i --frozen-lockfile
 
-RUN npm run build
+RUN pnpm build
 
 WORKDIR /app
 
 EXPOSE 4000
 
-CMD [ "npm", "start" ]
+CMD [ "pnpm", "start" ]

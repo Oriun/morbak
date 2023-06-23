@@ -15,12 +15,12 @@ export function findUnique(id: string) {
 
 export function create(roomPayload: CreateRoom) {
     const room: Room = {
-        id: nanoid(),
+        id: nanoid(8),
         players: [{
-            name: roomPayload.owner.name,
             userId: roomPayload.owner.id,
             order: 0,
         }],
+        timer: roomPayload.timer,
         ownerId: roomPayload.owner.id,
         history: [],
         size: roomPayload.size,
@@ -46,7 +46,7 @@ export function deleteMany(filter: (room: Room) => boolean) {
     return toDelete;
 }
 
-const SIMPLE_UPDATE = ["owner", "turn", "current", "winner", "started", "startedAt"] as const;
+const SIMPLE_UPDATE = ["owner", "turn", "current", "winner", "started", "startedAt", "timer"] as const;
 const ARRAY_UPDATE = ["history", "players"] as const;
 
 export function update(id: string, roomPayload: UpdateRoom) {

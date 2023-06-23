@@ -1,32 +1,29 @@
-import React, { useState } from 'react'
-import logo from './logo.svg'
-import './App.css'
+import React from "react";
+import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
+import "./App.css";
+import HomeView from "./views/home";
+import SelectView from "./views/select";
+import CreateView from "./views/create";
+import LobbyView from "./views/lobby";
+import MainLayout from "./layouts/main";
+import NameView from "./views/name";
+
 
 function App() {
-  const [count, setCount] = useState(0)
-
+  console.log("hello");
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Hello Vite + React!</p>
-        <p>
-          <button onClick={() => setCount(count => count + 1)}>count is: {count}</button>
-        </p>
-        <p>
-          Edit <code>App.tsx</code> and save to test HMR updates.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  )
+    <MainLayout>
+      <Router>
+        <Routes>
+          <Route index element={<HomeView />} />
+          <Route path="/name" element={<NameView />} />
+          <Route path="/select" element={<SelectView />} />
+          <Route path="/create" element={<CreateView />} />
+          <Route path="/lobby" element={<LobbyView />} />
+        </Routes>
+      </Router>
+    </MainLayout>
+  );
 }
 
-export default App
+export default App;

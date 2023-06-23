@@ -8,13 +8,13 @@ export interface History {
 }
 
 export interface Player {
-    name: string;
     userId: string;
     order: number;
 }
 
 export interface Room {
     id: string;
+    timer: number;
     players: Player[]
     ownerId: string;
     history: History[];
@@ -29,12 +29,14 @@ export interface Room {
 }
 
 export interface CreateRoom {
+    timer: number;
     owner: User;
     size: BoardSize;
     winLength: number;
 }
 
 export interface UpdateRoom {
+    timer?: number;
     ownerId?: string;
     history?: ArrayUpdate<History>;
     players?: ArrayUpdate<Player>;

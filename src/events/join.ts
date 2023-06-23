@@ -20,11 +20,10 @@ export async function join(socket: Socket, userId: string, roomId: string) {
     room = Room.update(roomId, {
         players: {
             create: {
-                name: user.name,
                 userId: user.id,
                 order: room.players.length,
             }
-        }
+        },
     })
 
     socket.broadcast.to(roomId).emit("user-joined", JSON.stringify(user));

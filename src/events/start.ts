@@ -1,10 +1,9 @@
 import * as User from "../services/user.js"
 import * as Room from "../services/rooms.js"
 import type { Socket } from "socket.io";
-import { Player } from "../types/room.types.js";
 import { instantiate } from "../services/game.js";
 
-export async function leave(socket: Socket, userId: string) {
+export async function start(socket: Socket, userId: string) {
     const user = User.findUnique(userId);
     if (!user) {
         socket.emit("start", "user-not-found")
