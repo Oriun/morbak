@@ -5,6 +5,8 @@ import useInput from "@/hooks/use-input";
 import { ask } from "@/services/socket";
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "@chakra-ui/react";
+import { createRoom } from "@/services/functions";
 
 interface ICreateViewProps {}
 
@@ -14,29 +16,31 @@ const CreateView: React.FunctionComponent<ICreateViewProps> = (props) => {
   const size = useInput<HTMLSelectElement>("4x4");
   const winLength = useInput<HTMLInputElement, number>(5);
   const timer = useInput<HTMLInputElement, number>(5);
+  const toast = useToast();
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     console.log("submit");
-    const data = await ask("create")(
-      JSON.stringify({
-        size: size.value.split("x").map((a) => parseInt(a)),
-        winLength: winLength.value,
-        timer: timer.value,
-      })
-    );
-    if (data === "success") {
-      const room = await ask("room")();
-      if (!room || room === "user-not-found" || room === "not-joined")
-        return alert("Erreur lors de la création de la partie");
+    try {
+      const room = await createRoom(
+        size.value.split("x").map((a) => parseInt(a)) as [number, number],
+        winLength.value,
+        timer.value
+      );
       update((state) => ({
         ...state,
-        room: JSON.parse(room),
+        room,
       }));
       navigate("/lobby");
-      return;
+    } catch (e) {
+      toast({
+        title: "Erreur lors de la création de la partie",
+        description: (e as Error).message,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
     }
-    alert("Erreur lors de la création de la partie :" + data);
   }
 
   return (

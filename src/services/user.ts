@@ -45,7 +45,7 @@ export function update(id: string, userPayload: UpdateUser) {
         ...userPayload
     }
     users.set(id, updatedUser);
-    return user;
+    return updatedUser;
 }
 export function updateMany(filter: (room: User) => boolean, userPayload: UpdateUser) {
     const userList = findMany(filter);

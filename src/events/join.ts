@@ -9,7 +9,7 @@ export async function join(socket: Socket, userId: string, roomId: string) {
         return;
     }
     if (room.started) {
-        socket.emit("join", "started")
+        socket.emit("join", "already-started")
         return;
     }
     await socket.join(roomId);
@@ -26,7 +26,5 @@ export async function join(socket: Socket, userId: string, roomId: string) {
         },
     })
 
-    socket.broadcast.to(roomId).emit("user-joined", JSON.stringify(user));
-    socket.emit("users", JSON.stringify(room.players));
-    socket.broadcast.to(roomId).emit("users", JSON.stringify(room.players));
+    socket.to(roomId).emit("user-joined", JSON.stringify(user));
 }

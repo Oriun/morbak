@@ -7,6 +7,9 @@ import {
   useEffect,
   useState,
 } from "react";
+import { useToast } from "@chakra-ui/react";
+import { getMyself, getUserById, recover } from "@/services/functions";
+import { userJoined, userLeft, userUpdated } from "@/services/listeners";
 
 export type User = {
   id: string;
@@ -55,42 +58,89 @@ const MainContext = createContext<Context>({
 export const Provider: React.FC<{
   children: React.ReactNode | React.ReactNode[];
 }> = ({ children }) => {
-  const fromStorage = sessionStorage.getItem("context");
-  const [state, update] = useState<Omit<Context, "update">>(
-    fromStorage ? JSON.parse(fromStorage) : defaultContext
-  );
+  const [state, update] = useState<Omit<Context, "update">>(defaultContext);
+  const toast = useToast();
 
   useEffect(() => {
     console.log({ state });
-    sessionStorage.setItem("context", JSON.stringify(state));
   }, [state]);
 
   useEffect(() => {
     const morbakID = sessionStorage.getItem("morbakID");
 
-    console.log("morbakID", morbakID);
-
     (async () => {
       if (morbakID) {
-        const recovery = await ask("recover")(morbakID);
-        if (recovery === "not-found") {
+        try {
+          await recover(morbakID);
+        } catch (e) {
+          console.error(e);
           sessionStorage.removeItem("morbakID");
         }
-        update(defaultContext);
       }
-      const data = await ask("me")();
-      console.log("me", data);
-      if (!data || data === "not-found") return;
-      const user = JSON.parse(data);
-      update((state) => ({
-        ...state,
-        user,
-      }));
-      sessionStorage.setItem("morbakID", user.id);
+      try {
+        const user = await getMyself();
+        update((state) => ({
+          ...state,
+          user,
+        }));
+        sessionStorage.setItem("morbakID", user.id);
+      } catch (e) {
+        console.error(e);
+      }
     })();
   }, []);
 
-  socket
+  useEffect(() => {
+    if (!state.room) return;
+    const { players } = state.room;
+    const userIds = players.map((p) => p.userId);
+    const missingUsers = userIds.filter(
+      (userId) => !state.users.find((u) => u.id === userId)
+    );
+    if (missingUsers.length === 0) return;
+    (async () => {
+      for (const userId of missingUsers) {
+        try {
+          const user = await getUserById(userId);
+          update((state) => ({
+            ...state,
+            users: [...state.users, user],
+          }));
+        } catch (e) {
+          console.error(e);
+        }
+      }
+      update((state) => {
+        const newState = structuredClone(state);
+        newState.users = newState.users.filter(
+          (user, index, self) =>
+            index === self.findLastIndex((u) => u.id === user.id)
+        );
+        return newState;
+      });
+    })();
+  }, [state.room]);
+
+  useEffect(() => {
+    const ctx = {
+      update,
+      state,
+      toast,
+    };
+    const joinListener = userJoined(ctx);
+    const removeUser = userLeft(ctx);
+    const updateUser = userUpdated(ctx);
+
+    socket.on("user-joined", joinListener);
+    socket.on("user-left", removeUser);
+    socket.on("user-update", updateUser);
+
+    return () => {
+      socket.off("user-joined", joinListener);
+      socket.off("user-left", removeUser);
+      socket.off("user-update", updateUser);
+    };
+  }, [state, toast, update]);
 
   return (
     <MainContext.Provider value={{ ...state, update }}>

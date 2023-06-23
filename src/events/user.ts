@@ -16,9 +16,5 @@ export async function user(
     socket.emit("user", "not-found");
     return;
   }
-  if (user.currentRoom !== otherUser.currentRoom) {
-    socket.emit("user", "not-found");
-    return;
-  }
   socket.emit("user", JSON.stringify(otherUser));
 }

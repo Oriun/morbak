@@ -35,13 +35,13 @@ export async function leave(socket: Socket, userId: string) {
         })
     }
 
-    await socket.leave(room.id);
-
+    
     User.update(userId, {
         currentRoom: null,
     })
-
+    console.log("rooms", socket.rooms)
+    socket.to(room.id).emit("user-left", JSON.stringify(user));
+    await socket.leave(room.id);
     socket.emit("leave", "success");
-    socket.broadcast.to(room.id).emit("user-left", JSON.stringify(user));
 
 }

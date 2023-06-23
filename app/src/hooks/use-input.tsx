@@ -17,14 +17,14 @@ const useInput = <
   T extends S = HTMLInputElement | HTMLTextAreaElement,
   V extends string | number = string
 >(
-  initialValue?: V,
+  initialValue: V,
   {
     transform = (v) => v,
     validate = (v) => true,
     onError = (v) => {},
   }: UseInputOptions<V> = {}
 ) => {
-  const [value, setValue] = React.useState(initialValue ?? "");
+  const [value, setValue] = React.useState<V>(initialValue as V);
   const onChange = (e: React.ChangeEvent<T> | V) => {
     const value = typeof e === "object" ? e.target.value : e;
     if (!validate(value)) {

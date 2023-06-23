@@ -20,9 +20,8 @@ export async function create(socket: Socket, userId: string, payload: string) {
         timer
     })
     await socket.join(room.id);
-    socket.emit("create", "success");
     User.update(userId, {
         currentRoom: room.id,
     })
-    socket.emit("join", "success");
+    socket.emit("create", "success");
 }
