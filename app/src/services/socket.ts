@@ -11,7 +11,7 @@ const socket = io();
 
 export function send({ type, data }: WSMessage) {
   socket.emit(type, data);
-};
+}
 
 export function register(type: string, listener: Listener) {
   socket.on(type, listener);

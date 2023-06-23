@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 
 interface IMorbakLogoProps extends React.SVGAttributes<SVGSVGElement> {}
@@ -7,6 +8,12 @@ const MorbakLogo: React.FunctionComponent<IMorbakLogoProps> = ({
   className,
   ...props
 }) => {
+  const navigate = useNavigate()
+
+  function handleClick() {
+    navigate("/")
+  }
+
   return (
     <svg
       width="45"
@@ -16,6 +23,7 @@ const MorbakLogo: React.FunctionComponent<IMorbakLogoProps> = ({
       xmlns="http://www.w3.org/2000/svg"
       {...props}
       className={twMerge("w-52 h-auto", className)}
+      onClick={handleClick}
     >
       <g id="Morbak">
         <mask

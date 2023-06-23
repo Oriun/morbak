@@ -8,6 +8,7 @@ import { user } from "./user.js";
 import { me } from "./me.js";
 import { play } from "./play.js";
 import { test } from "./test.js";
+import { room } from "./room.js";
 
 export const Events: Record<string, typeof join> = {
   join,
@@ -19,5 +20,6 @@ export const Events: Record<string, typeof join> = {
   user,
   me,
   play,
-  test
+  test,
+  room
 };

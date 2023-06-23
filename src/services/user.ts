@@ -13,11 +13,13 @@ export function findUnique(id: string) {
 }
 
 export function create(roomPayload: CreateUser) {
+    const id = nanoid()
     const user: User = {
-        id: nanoid(),
+        id,
         createdAt: Date.now(),
         currentRoom: null,
         name: roomPayload.name,
+        avatar: "https://api.dicebear.com/6.x/bottts-neutral/svg?seed="+id,
         socketId: roomPayload.socketId,
     }
     users.set(user.id, user);

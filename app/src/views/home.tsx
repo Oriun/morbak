@@ -1,28 +1,33 @@
-import { ask } from "@/services/socket";
 import * as React from "react";
+import { useMainContext } from "@/contexts/main";
 import { Link, useNavigate } from "react-router-dom";
 
 interface IHomeViewProps {}
 
 const HomeView: React.FunctionComponent<IHomeViewProps> = (props) => {
   const navigate = useNavigate();
+  const { user } = useMainContext();
+  const [nextPage, setNextPage] = React.useState<string>("/name");
 
   React.useEffect(() => {
-    (async () => {
-      console.log("asking me")
-      const data = await ask("me")();
-      if(!data) {
-        throw new Error("no data")
-      }
-      const me = JSON.parse(data)
-      console.log({ me });
-    })();
-    // setTimeout(() => {
-    //   navigate("/name");
-    // }, 5000);
+    if (user && user.name !== "Anonymous") {
+      setNextPage("/select");
+      const timeout = setTimeout(() => {
+        navigate("/select");
+      }, 5000);
+      return () => {
+        clearTimeout(timeout);
+      };
+    }
+    const timeout = setTimeout(() => {
+      navigate("/name");
+    }, 5000);
+    return () => {
+      clearTimeout(timeout);
+    };
   }, []);
   return (
-    <Link to="/name">
+    <Link to={nextPage}>
       <img src="/monkey.gif" className="w-40 h-40 rounded-full" />
     </Link>
   );

@@ -5,24 +5,25 @@ import HomeView from "./views/home";
 import SelectView from "./views/select";
 import CreateView from "./views/create";
 import LobbyView from "./views/lobby";
-import MainLayout from "./layouts/main";
 import NameView from "./views/name";
-
+import MainLayout from "./layouts/main";
+import { Provider } from "./contexts/main";
 
 function App() {
-  console.log("hello");
   return (
-    <MainLayout>
+    <Provider>
       <Router>
-        <Routes>
-          <Route index element={<HomeView />} />
-          <Route path="/name" element={<NameView />} />
-          <Route path="/select" element={<SelectView />} />
-          <Route path="/create" element={<CreateView />} />
-          <Route path="/lobby" element={<LobbyView />} />
-        </Routes>
+        <MainLayout>
+          <Routes>
+            <Route index element={<HomeView />} />
+            <Route path="/name" element={<NameView />} />
+            <Route path="/select" element={<SelectView />} />
+            <Route path="/create" element={<CreateView />} />
+            <Route path="/lobby" element={<LobbyView />} />
+          </Routes>
+        </MainLayout>
       </Router>
-    </MainLayout>
+    </Provider>
   );
 }
 

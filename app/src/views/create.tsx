@@ -1,6 +1,8 @@
 import Button from "@/components/button";
 import Input from "@/components/input";
+import { useMainContext } from "@/contexts/main";
 import useInput from "@/hooks/use-input";
+import { ask } from "@/services/socket";
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -8,21 +10,37 @@ interface ICreateViewProps {}
 
 const CreateView: React.FunctionComponent<ICreateViewProps> = (props) => {
   const navigate = useNavigate();
-  const size = useInput<HTMLSelectElement>();
+  const { update } = useMainContext();
+  const size = useInput<HTMLSelectElement>("4x4");
   const winLength = useInput<HTMLInputElement, number>(5);
   const timer = useInput<HTMLInputElement, number>(5);
 
-  function submit(e: React.FormEvent<HTMLFormElement>) {
+  async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     console.log("submit");
-    navigate("/lobby");
+    const data = await ask("create")(
+      JSON.stringify({
+        size: size.value.split("x").map((a) => parseInt(a)),
+        winLength: winLength.value,
+        timer: timer.value,
+      })
+    );
+    if (data === "success") {
+      const room = await ask("room")();
+      if (!room || room === "user-not-found" || room === "not-joined")
+        return alert("Erreur lors de la création de la partie");
+      update((state) => ({
+        ...state,
+        room: JSON.parse(room),
+      }));
+      navigate("/lobby");
+      return;
+    }
+    alert("Erreur lors de la création de la partie :" + data);
   }
-  
+
   return (
-    <form
-      onSubmit={submit}
-      className="flex flex-col gap-4 items-start w-64"
-    >
+    <form onSubmit={submit} className="flex flex-col gap-4 items-start w-64">
       <h2 className="text-2xl font-semibold w-full mb-8">Créer une partie</h2>
       <h4 className="text-lg font-medium">Taille de la grille</h4>
       <select {...size} className="h-10 text-black px-4 w-full mb-4">
@@ -39,10 +57,17 @@ const CreateView: React.FunctionComponent<ICreateViewProps> = (props) => {
           className="w-16 mr-4"
           {...winLength}
         />
-        <span>consécutifs</span>
+        <span>symbols consécutifs</span>
       </div>
-      <h4 className="text-lg font-medium">Timer</h4>
-      <Input type="number" placeholder="Temps" className="w-full" min={2} max={10} {...timer} />
+      <h4 className="text-lg font-medium">Timer (secondes)</h4>
+      <Input
+        type="number"
+        placeholder="Temps"
+        className="w-full"
+        min={2}
+        max={10}
+        {...timer}
+      />
       <Button className="w-full mt-8">Créer</Button>
     </form>
   );

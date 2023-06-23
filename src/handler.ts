@@ -17,22 +17,26 @@ function handleUser(socket: Socket) {
       socket.emit("recover", "not-found");
       return;
     }
-    user = User.update(user.id, {
+    console.log({ userFound })
+    user = User.update(userFound.id, {
       socketId: socket.id,
     });
+    console.log({ user })
     socket.emit("recover", JSON.stringify(user));
   });
 
   for (const event in Events) {
     socket.on(event, (data: string) => {
-      try {
-        console.log({ event, data });
-        Events[event](socket, user.id, data);
-      } catch (e) {
+      console.log({ event, data });
+      Events[event](socket, user.id, data).catch((e) => {
         socket.emit(event, "error");
-      }
+        console.log("error", e);
+      });
     });
   }
+  socket.onAny((event, ...data) => {
+    console.log({ event, data });
+  });
 }
 
 export default handleUser;

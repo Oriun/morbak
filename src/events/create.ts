@@ -8,14 +8,11 @@ export async function create(socket: Socket, userId: string, payload: string) {
         socket.emit("create", "user-not-found")
         return;
     }
-
     if (user.currentRoom) {
         socket.emit("create", "already-joined")
         return;
     }
-
     const { size, winLength, timer } = JSON.parse(payload);
-
     const room = Room.create({
         owner: user,
         size,

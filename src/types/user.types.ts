@@ -1,18 +1,20 @@
 export interface User {
-    id: string;
-    name: string;
-    currentRoom: string | null;
-    socketId: string;
-    createdAt: number;
+  id: string;
+  avatar: string | null
+  name: string;
+  currentRoom: string | null;
+  socketId: string;
+  createdAt: number;
 }
 
 export interface CreateUser {
-    name: string;
-    socketId: string;
+  name: string;
+  socketId: string;
 }
 
 export interface UpdateUser {
-    name?: string;
-    currentRoom?: string | null;
-    socketId?: string;
+  name?: string;
+  avatar?: string | null
+  currentRoom?: string | null;
+  socketId?: string;
 }

@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node dist/index.js",
     "build": "tsc",
-    "dev": "nodemon -i dist/ -e ts -x \"tsc && node dist/index.js\""
+    "dev": "nodemon -i dist/ -i app -e ts -x \"tsc && node dist/index.js\""
   },
   "keywords": [],
   "author": "",
