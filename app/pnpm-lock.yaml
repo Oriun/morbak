@@ -20,6 +20,9 @@ dependencies:
   '@vitejs/plugin-react':
     specifier: ^4.0.1
     version: 4.0.1(vite@4.3.9)
+  clsx:
+    specifier: ^1.2.1
+    version: 1.2.1
   framer-motion:
     specifier: ^10.12.17
     version: 10.12.17(react-dom@18.2.0)(react@18.2.0)
@@ -1946,6 +1949,11 @@ packages:
     optionalDependencies:
       fsevents: 2.3.2
     dev: true
+
+  /clsx@1.2.1:
+    resolution: {integrity: sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==}
+    engines: {node: '>=6'}
+    dev: false
 
   /color-convert@1.9.3:
     resolution: {integrity: sha512-QfAUtd+vFdAtFQcC8CCyYt1fYWxSqAiK2cSD6zDB8N3cpsEBAvRxp9zOGg6G/SHHJYAT88/az/IuDGALsNVbGg==}

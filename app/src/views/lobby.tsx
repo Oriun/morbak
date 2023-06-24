@@ -7,16 +7,14 @@ import {
   getCurrentRoom,
   getMyself,
   leaveCurrentRoom,
+  startGame
 } from "@/services/functions";
-import {
-  ClockIcon,
-  ArrowsPointingOutIcon,
-  ArrowTrendingUpIcon,
-} from "@heroicons/react/24/outline";
+
 import {
   ClipboardIcon,
 } from "@heroicons/react/24/solid";
 import UserCard from "@/components/user-card";
+import GameInfos from "@/components/game-info";
 
 interface ILobbyViewProps {}
 
@@ -51,7 +49,13 @@ const LobbyView: React.FunctionComponent<ILobbyViewProps> = (props) => {
     })();
   }, [room, user, users]);
 
-  async function startGame() {
+  React.useEffect(() => {
+    if(room?.started) {
+      navigate("/game");
+    }
+  }, [room]);
+
+  async function startWithRoom() {
     try {
       await startGame();
     } catch (e) {
@@ -112,20 +116,7 @@ const LobbyView: React.FunctionComponent<ILobbyViewProps> = (props) => {
           {room.id} <ClipboardIcon className="w-4 h-4 text-indigo-dye ml-3" />
         </Button>
       </div>
-      <div className="flex items-center justify-center gap-4">
-        <div className="flex items-center gap-2">
-          <ClockIcon className="rounded-full w-6 h-6 p-1 bg-white text-indigo-dye" />
-          <p>{room.timer} secondes</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <ArrowsPointingOutIcon className="rounded-full w-6 h-6 p-1 bg-white text-indigo-dye" />
-          <p>{room.size.join("x")}</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <ArrowTrendingUpIcon className="rounded-full w-6 h-6 p-1 bg-white text-indigo-dye" />
-          <p>{room.winLength} alignés</p>
-        </div>
-      </div>
+      <GameInfos {...room} />
       <p className="flex items-center gap-2 mt-6 mb-3">
         Joueurs{" "}
         <span className="p-1 bg-caribbean-current text-white rounded-full aspect-square flex w-5 h-5 items-center justify-center text-xs font-semibold">
@@ -155,7 +146,7 @@ const LobbyView: React.FunctionComponent<ILobbyViewProps> = (props) => {
           })}
       </ul>
       <div className="flex flex-col items-stretch gap-2">
-        {canStart && <Button onClick={startGame}>Commencer la partie</Button>}
+        {canStart && <Button onClick={startWithRoom}>Commencer la partie</Button>}
         <Button className="bg-rusty-red text-white" onClick={leaveRoom}>
           Quitter la room
         </Button>

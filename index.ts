@@ -4,7 +4,7 @@ import handleUser from "./src/handler.js";
 
 const io = new WsServer(Server);
 
-io.on("connection", handleUser);
+io.on("connection", handleUser(io));
 
 Server.listen(4000, "0.0.0.0", () => {
   console.log("listening on *:4000");

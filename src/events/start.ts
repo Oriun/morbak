@@ -1,9 +1,9 @@
 import * as User from "../services/user.js"
 import * as Room from "../services/rooms.js"
-import type { Socket } from "socket.io";
+import type { Server, Socket } from "socket.io";
 import { instantiate } from "../services/game.js";
 
-export async function start(socket: Socket, userId: string) {
+export async function start(socket: Socket, io: Server, userId: string) {
     const user = User.findUnique(userId);
     if (!user) {
         socket.emit("start", "user-not-found")
@@ -38,5 +38,5 @@ export async function start(socket: Socket, userId: string) {
     socket.emit("start", "success");
     socket.broadcast.to(room.id).emit("game-started", JSON.stringify(room));
 
-    instantiate(room);
+    instantiate(room, io);
 }

@@ -2,11 +2,6 @@ import { Board, BoardSize, BoardAction } from "./board.types.js";
 import { ArrayUpdate } from "./common.types.js";
 import { User } from "./user.types.js";
 
-export interface History {
-    player: string;
-    action: BoardAction | null
-}
-
 export interface Player {
     userId: string;
     order: number;
@@ -17,11 +12,11 @@ export interface Room {
     timer: number;
     players: Player[]
     ownerId: string;
-    history: History[];
+    history: (BoardAction | null)[];
     size: BoardSize;
     winLength: number;
     turn: number;
-    current: Board;
+    board: Board;
     winner: string | null;
     started: boolean;
     createdAt: number;
@@ -38,10 +33,10 @@ export interface CreateRoom {
 export interface UpdateRoom {
     timer?: number;
     ownerId?: string;
-    history?: ArrayUpdate<History>;
+    history?: ArrayUpdate<BoardAction|null>;
     players?: ArrayUpdate<Player>;
     turn?: number;
-    current?: Board;
+    board?: Board;
     winner?: string;
     started?: boolean;
     startedAt?: number;

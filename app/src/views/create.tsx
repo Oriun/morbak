@@ -13,7 +13,7 @@ interface ICreateViewProps {}
 const CreateView: React.FunctionComponent<ICreateViewProps> = (props) => {
   const navigate = useNavigate();
   const { update } = useMainContext();
-  const size = useInput<HTMLSelectElement>("4x4");
+  const size = useInput<HTMLSelectElement>("6x6");
   const winLength = useInput<HTMLInputElement, number>(5);
   const timer = useInput<HTMLInputElement, number>(5);
   const toast = useToast();

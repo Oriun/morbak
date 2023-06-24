@@ -1,8 +1,8 @@
 import * as User from "../services/user.js"
 import * as Room from "../services/rooms.js"
-import type { Socket } from "socket.io";
+import type { Server, Socket } from "socket.io";
 
-export async function join(socket: Socket, userId: string, roomId: string) {
+export async function join(socket: Socket, io: Server, userId: string, roomId: string) {
     let room = Room.findUnique(roomId);
     if (!room) {
         socket.emit("join", "not-found")

@@ -23,7 +23,6 @@ const MainLayout: React.FunctionComponent<IMainLayoutProps> = (props) => {
       }
     })();
   }, []);
-  console.log("in layout", user);
   async function testFn() {
     await ask("test")();
   }
@@ -48,9 +47,6 @@ const MainLayout: React.FunctionComponent<IMainLayoutProps> = (props) => {
       )}
       <section className="overflow-auto">{props.children}</section>
       <footer className="text-center text-xs shrink-0">
-        <Button onClick={testFn} className="mb-4">
-          Test
-        </Button>
         <p>
           Made with{" "}
           <span role="img" aria-label="heart">

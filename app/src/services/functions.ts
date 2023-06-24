@@ -104,3 +104,10 @@ export async function startGame() {
     throw new Error("Can't start game");
   }
 }
+
+export async function play(row: number, col: number) {
+  const res = await ask("play")(JSON.stringify({ row, col }));
+  if (!res || errors.includes(res) || res !== "success") {
+    throw new Error("Can't play this move");
+  }
+}

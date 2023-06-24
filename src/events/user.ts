@@ -1,8 +1,9 @@
 import * as User from "../services/user.js";
-import type { Socket } from "socket.io";
+import type { Server, Socket } from "socket.io";
 
 export async function user(
   socket: Socket,
+  io: Server,
   userId: string,
   otherUserId: string
 ) {

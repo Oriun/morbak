@@ -1,9 +1,9 @@
 import * as User from "../services/user.js"
 import * as Room from "../services/rooms.js"
-import type { Socket } from "socket.io";
+import type { Server, Socket } from "socket.io";
 import { Player } from "../types/room.types.js";
 
-export async function kick(socket: Socket, userId: string, kickUserId: string) {
+export async function kick(socket: Socket, io: Server, userId: string, kickUserId: string) {
     const user = User.findUnique(userId);
     if (!user) {
         socket.emit("kick", "user-not-found")

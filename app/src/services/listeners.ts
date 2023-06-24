@@ -101,3 +101,27 @@ export function userUpdated({ update, state }: IListenerProps) {
     });
   };
 }
+
+export function roomUpdated({ update }: IListenerProps) {
+  return function (data: string) {
+    console.log("room-update", data);
+    const room = JSON.parse(data);
+    update((state) => {
+      const newState = structuredClone(state);
+      newState.room = room;
+      return newState;
+    });
+  };
+}
+
+export function gameStarted({ update }: IListenerProps) {
+  return function (data: string) {
+    console.log("game-started", data);
+    const room = JSON.parse(data);
+    update((state) => {
+      const newState = structuredClone(state);
+      newState.room = room;
+      return newState;
+    });
+  };
+}

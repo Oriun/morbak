@@ -6,7 +6,6 @@ import { rename } from "./rename.js";
 import { start } from "./start.js";
 import { user } from "./user.js";
 import { me } from "./me.js";
-import { play } from "./play.js";
 import { test } from "./test.js";
 import { room } from "./room.js";
 
@@ -19,7 +18,6 @@ export const Events: Record<string, typeof join> = {
   start,
   user,
   me,
-  play,
   test,
   room
 };

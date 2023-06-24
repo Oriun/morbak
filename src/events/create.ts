@@ -1,8 +1,8 @@
 import * as User from "../services/user.js"
 import * as Room from "../services/rooms.js"
-import type { Socket } from "socket.io";
+import type { Server, Socket } from "socket.io";
 
-export async function create(socket: Socket, userId: string, payload: string) {
+export async function create(socket: Socket, io: Server, userId: string, payload: string) {
     const user = User.findUnique(userId);
     if (!user) {
         socket.emit("create", "user-not-found")

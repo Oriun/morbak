@@ -1,6 +1,7 @@
 import { Room, CreateRoom, UpdateRoom } from "../types/room.types.js";
 import { nanoid } from "nanoid";
 import { arrayUpdate } from "../utils.js";
+import { createBoard } from "../board.js";
 
 const rooms: Map<string, Room> = new Map();
 
@@ -26,7 +27,7 @@ export function create(roomPayload: CreateRoom) {
         size: roomPayload.size,
         winLength: roomPayload.winLength,
         turn: 0,
-        current: Array.from({ length: roomPayload.size[0] }, () => Array.from({ length: roomPayload.size[1] }, () => null)),
+        board: createBoard(roomPayload.size),
         winner: null,
         started: false,
         createdAt: Date.now(),
@@ -46,7 +47,7 @@ export function deleteMany(filter: (room: Room) => boolean) {
     return toDelete;
 }
 
-const SIMPLE_UPDATE = ["owner", "turn", "current", "winner", "started", "startedAt", "timer"] as const;
+const SIMPLE_UPDATE = ["owner", "turn", "board", "winner", "started", "startedAt", "timer"] as const;
 const ARRAY_UPDATE = ["history", "players"] as const;
 
 export function update(id: string, roomPayload: UpdateRoom) {

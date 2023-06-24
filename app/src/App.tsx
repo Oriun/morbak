@@ -8,11 +8,12 @@ import LobbyView from "./views/lobby";
 import NameView from "./views/name";
 import MainLayout from "./layouts/main";
 import { Provider } from "./contexts/main";
+import GameView from "./views/game";
 
 function App() {
   return (
-    <Provider>
-      <Router>
+    <Router>
+      <Provider>
         <MainLayout>
           <Routes>
             <Route index element={<HomeView />} />
@@ -20,10 +21,11 @@ function App() {
             <Route path="/select" element={<SelectView />} />
             <Route path="/create" element={<CreateView />} />
             <Route path="/lobby" element={<LobbyView />} />
+            <Route path="/game" element={<GameView />} />
           </Routes>
         </MainLayout>
-      </Router>
-    </Provider>
+      </Provider>
+    </Router>
   );
 }
 
