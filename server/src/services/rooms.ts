@@ -1,7 +1,7 @@
 import { Room, CreateRoom, UpdateRoom } from "../types/room.types.js";
 import { nanoid } from "nanoid";
 import { arrayUpdate } from "../utils.js";
-import { createBoard } from "../board.js";
+import { createBoard } from "./board.js";
 
 const rooms: Map<string, Room> = new Map();
 

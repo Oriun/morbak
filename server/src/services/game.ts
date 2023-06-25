@@ -1,7 +1,7 @@
 import { Room as RoomType } from "../types/room.types.js";
 import * as Room from "../services/rooms.js";
 import * as User from "../services/user.js";
-import { checkWin, fillBoard } from "../board.js";
+import { checkWin, fillBoard } from "./board.js";
 import type { Server, Socket } from "socket.io";
 import { Move } from "../types/board.types.js";
 import { Subject, Subscription } from "rxjs";

@@ -22,15 +22,15 @@ WORKDIR /morbak
 # Install app dependencies
 RUN npm install -g pnpm
 
-COPY package.json ./
+COPY server/package.json ./
 
-COPY pnpm-lock.yaml ./
+COPY server/pnpm-lock.yaml ./
 
 RUN pnpm i --frozen-lockfile
 
 # Bundle app source
 
-COPY . .
+COPY server/ .
 
 RUN pnpm build
 

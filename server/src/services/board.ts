@@ -1,4 +1,4 @@
-import { Board, BoardAction, BoardSize } from "./types/board.types.js";
+import { Board, BoardAction, BoardSize } from "../types/board.types.js";
 
 export function createBoard(size: BoardSize) {
   return Array.from({ length: size[0] }, () =>
@@ -37,42 +37,28 @@ function checkVertical(board: Board, winLength: number) {
 }
 function checkDiagonal(board: Board, winLength: number) {
   for (let i = 0; i < board.length - winLength + 1; i++) {
-    for (let j = 0; j < board[0].length - winLength + 1; j++) {
-      let current = board[i][j];
-      let count = 0;
+    for (let j = 0; j < board[i].length - winLength + 1; j++) {
+      const slice: Board[0] = [];
       for (let k = 0; k < winLength; k++) {
-        const cell = board[i + k][j + k];
-        if (cell && cell?.playerId === current?.playerId) {
-          count++;
-        } else {
-          current = cell;
-          count = 1;
-        }
-        if (count === winLength && current !== null) {
-          return current;
-        }
+        slice.push(board[i + k][j + k]);
+      }
+      if (slice.every((cell) => cell === slice[0])) {
+        return slice[0];
       }
     }
   }
   for (let i = 0; i < board.length - winLength + 1; i++) {
-    for (let j = winLength - 1; j < board[0].length; j++) {
-      let current = board[i][j];
-      let count = 0;
+    for (let j = winLength - 1; j < board[i].length; j++) {
+      const slice: Board[0] = [];
       for (let k = 0; k < winLength; k++) {
-        const cell = board[i + k][j - k];
-        if (cell && cell?.playerId === current?.playerId) {
-          count++;
-        } else {
-          current = cell;
-          count = 1;
-        }
-        if (count === winLength && current !== null) {
-          return current;
-        }
+        slice.push(board[i + k][j - k]);
+      }
+      if (slice.every((cell) => cell === slice[0])) {
+        return slice[0];
       }
     }
   }
-  return null;
+  return null
 }
 
 export function checkWin(board: Board, winLength: number) {
