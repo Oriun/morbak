@@ -17,6 +17,6 @@ app.post("/join", (req, res) => {
   res.send("ko");
 });
 
-server.listen(4001, () => {
+server.listen(4001, "0.0.0.0", () => {
   console.log("listening on *:4001");
 });
