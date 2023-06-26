@@ -6,3 +6,8 @@ services:
     ports:
       - "4000:4000"
     restart: unless-stopped
+  ai:
+    build: ./ai
+    ports:
+      - "4001:4001"
+    restart: unless-stopped

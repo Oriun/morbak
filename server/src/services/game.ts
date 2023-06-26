@@ -55,6 +55,8 @@ export async function instantiate(_room: RoomType, io: Server) {
     };
   }
 
+  let aborted = false;
+  let subscription: Subscription;
   let notifyWinner: (id: string) => void;
 
   const winnerNotificationPromise = new Promise<string>((r) => {
@@ -64,6 +66,10 @@ export async function instantiate(_room: RoomType, io: Server) {
   for (const socket of sockets) {
     console.log("on play");
     socket.on("play", captureMove(socket));
+    socket.once("quit",()=>{
+      aborted = true
+      subscription.unsubscribe()
+    })
     socket.emit("game-started", JSON.stringify(room));
     winnerNotificationPromise.then((id) => {
       socket.emit("game-ended", id);
@@ -71,6 +77,10 @@ export async function instantiate(_room: RoomType, io: Server) {
     });
     captureMap.set(socket.id, (sock) => {
       sock.on("play", captureMove(sock));
+      socket.once("quit",()=>{
+        aborted = true
+        subscription.unsubscribe()
+      })
       winnerNotificationPromise.then((id) => {
         sock.emit("game-ended", id);
         captureMap.delete(sock.id);
@@ -78,8 +88,7 @@ export async function instantiate(_room: RoomType, io: Server) {
     });
   }
 
-  while (!checkWin(board, winLength)) {
-    let subscription: Subscription;
+  while (!aborted && !checkWin(board, winLength)) {
     await new Promise<void>((r) => {
       console.log("awaiting move");
       subscription = moves$.subscribe(([action, socket, user]) => {
@@ -118,19 +127,22 @@ export async function instantiate(_room: RoomType, io: Server) {
 
         r();
       });
+      subscription.add(r)
     });
     subscription!.unsubscribe();
   }
 
-  const winner = getLastPlayer(room)
-  console.log("winner is", winner);
+  const winner = getLastPlayer(room);
+
   room.players.forEach((player) => {
     User.update(player.userId, {
       currentRoom: null,
     });
   });
   Room.deleteRoom(room.id);
-  notifyWinner!(winner);
+  if (!aborted) {
+    notifyWinner!(winner);
+  }
 }
 
 function getCurrentPlayer(room: RoomType) {

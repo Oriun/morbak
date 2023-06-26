@@ -1,3 +1,4 @@
+import Button from "@/components/button";
 import GameInfos from "@/components/game-info";
 import WinnerOverlay from "@/components/winner-overlay";
 import { User, useMainContext } from "@/contexts/main";
@@ -25,13 +26,31 @@ const GameView: React.FunctionComponent<IGameViewProps> = (props) => {
       const _winner = users.find((user) => user.id === winnerId)!;
       setWinner(_winner);
     }
+    function gameAborted() {
+      update((state) => {
+        const newState = structuredClone(state);
+        newState.room = null;
+        if (newState.user) {
+          newState.user.currentRoom = null;
+        }
+        return newState;
+      });
+      navigate("/select");
+      toast({
+        title: "Game aborted",
+        description: "The other player left the game",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+      })
+    }
     socket.on("game-ended", gameEnded);
+    socket.on("game-aborted", gameEnded);
     return () => {
       socket.off("game-ended", gameEnded);
+      socket.off("game-aborted", gameAborted);
     };
   }, [room, winner, setWinner]);
-
-  console.log({ winner });
 
   if (!room) return null;
 
@@ -67,17 +86,23 @@ const GameView: React.FunctionComponent<IGameViewProps> = (props) => {
     navigate("/select");
   }
 
+  function quitGame() {
+    socket.emit("quit");
+  }
+
   function getCurrentPlayer() {
-    if(!room) return null;
-    const {userId} = room.players.at(room.turn % room.players.length)!;
-    if(userId === me?.id) return "You";
+    if (!room) return null;
+    const { userId } = room.players.at(room.turn % room.players.length)!;
+    if (userId === me?.id) return "You";
     const player = users.find((user) => user.id === userId);
     return player?.name ?? "Unknown";
   }
 
   return (
-    <section  className="flex flex-col items-center gap-5 w-min">
-      <h4 className="w-full text-center text-xl font-medium">Current player : {getCurrentPlayer()}</h4>
+    <section className="flex flex-col items-center gap-5 w-min">
+      <h4 className="w-full text-center text-xl font-medium">
+        Current player : {getCurrentPlayer()}
+      </h4>
       <GameInfos {...room} />
       <div id="board" className="flex flex-col gap-[2px]">
         {room.board.map((row, i) => (
@@ -116,6 +141,9 @@ const GameView: React.FunctionComponent<IGameViewProps> = (props) => {
           </div>
         ))}
       </div>
+      <Button onClick={quitGame} className="w-full">
+        Quitter
+      </Button>
       {modalOpen && <WinnerOverlay winner={winner} close={close} next={next} />}
     </section>
   );

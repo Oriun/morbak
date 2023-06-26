@@ -42,7 +42,7 @@ function checkDiagonal(board: Board, winLength: number) {
       for (let k = 0; k < winLength; k++) {
         slice.push(board[i + k][j + k]);
       }
-      if (slice.every((cell) => cell === slice[0])) {
+      if (slice.every((cell) => cell?.playerId === slice[0]?.playerId)) {
         return slice[0];
       }
     }
@@ -53,7 +53,7 @@ function checkDiagonal(board: Board, winLength: number) {
       for (let k = 0; k < winLength; k++) {
         slice.push(board[i + k][j - k]);
       }
-      if (slice.every((cell) => cell === slice[0])) {
+      if (slice.every((cell) => cell?.playerId === slice[0]?.playerId)) {
         return slice[0];
       }
     }
