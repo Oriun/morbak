@@ -1,6 +1,7 @@
 import { io, Socket } from "socket.io-client";
 import { Board, BoardSize, printBoard } from "./board.js";
 import { minimax } from "./minimax.js";
+import { getCurrentPlayer } from "./game.js";
 
 export async function waitForEvent(
   socket: Socket,
@@ -84,8 +85,16 @@ export async function playInRoom(roomId: string) {
   while (!ended) {
     console.log("waiting for room update");
 
-    const data = await waitForEvent(socket, "room-update", 0);
-    const room = JSON.parse(data) as Room;
+    let room: Room;
+    do {
+      const data = await waitForEvent(socket, "room-update", 0);
+      room = JSON.parse(data) as Room;
+    } while (
+      getCurrentPlayer(
+        room.history,
+        room.players.map((p) => p.userId)
+      ) !== id
+    );
 
     console.log("room got updated");
 
