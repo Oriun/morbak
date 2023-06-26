@@ -89,13 +89,14 @@ export async function playInRoom(roomId: string) {
     do {
       const data = await waitForEvent(socket, "room-update", 0);
       room = JSON.parse(data) as Room;
+      if (ended) return;
     } while (
       getCurrentPlayer(
         room.history,
         room.players.map((p) => p.userId)
       ) !== id
     );
-
+    
     console.log("room got updated");
 
     const board = fromRealBoard(room.board);
