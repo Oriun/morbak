@@ -7,14 +7,13 @@ import {
   getCurrentRoom,
   getMyself,
   leaveCurrentRoom,
-  startGame
+  startGame,
 } from "@/services/functions";
 
-import {
-  ClipboardIcon,
-} from "@heroicons/react/24/solid";
+import { ClipboardIcon } from "@heroicons/react/24/solid";
 import UserCard from "@/components/user-card";
 import GameInfos from "@/components/game-info";
+import { ask } from "@/services/socket";
 
 interface ILobbyViewProps {}
 
@@ -50,7 +49,7 @@ const LobbyView: React.FunctionComponent<ILobbyViewProps> = (props) => {
   }, [room, user, users]);
 
   React.useEffect(() => {
-    if(room?.started) {
+    if (room?.started) {
       navigate("/game");
     }
   }, [room]);
@@ -95,7 +94,8 @@ const LobbyView: React.FunctionComponent<ILobbyViewProps> = (props) => {
     return null;
   }
 
-  const canStart = room.ownerId === user.id && room.players.length !== 1;
+  const isOwner = room.ownerId === user.id;
+  const canStart = isOwner && room.players.length !== 1;
 
   function copyRoomId() {
     navigator.clipboard.writeText(room!.id);
@@ -105,6 +105,10 @@ const LobbyView: React.FunctionComponent<ILobbyViewProps> = (props) => {
       duration: 9000,
       isClosable: true,
     });
+  }
+
+  async function requestAI() {
+    await ask("ai")();
   }
 
   return (
@@ -146,7 +150,10 @@ const LobbyView: React.FunctionComponent<ILobbyViewProps> = (props) => {
           })}
       </ul>
       <div className="flex flex-col items-stretch gap-2">
-        {canStart && <Button onClick={startWithRoom}>Commencer la partie</Button>}
+        {isOwner && <Button onClick={requestAI}>Ajouter une IA</Button>}
+        {canStart && (
+          <Button onClick={startWithRoom}>Commencer la partie</Button>
+        )}
         <Button className="bg-rusty-red text-white" onClick={leaveRoom}>
           Quitter la room
         </Button>
