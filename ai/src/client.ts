@@ -96,7 +96,7 @@ export async function playInRoom(roomId: string) {
         room.players.map((p) => p.userId)
       ) !== id
     );
-    
+
     console.log("room got updated");
 
     const board = fromRealBoard(room.board);
@@ -107,7 +107,7 @@ export async function playInRoom(roomId: string) {
       board,
       room.history,
       room.winLength,
-      5,
+      4,
       id,
       room.players.map((p) => p.userId)
     );
