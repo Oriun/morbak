@@ -21,7 +21,9 @@ export async function ai(socket: Socket, io: Server, userId: string) {
   }
 
   try {
-    const res = await fetch("http://ai:4001/join?id=" + room.id);
+    const res = await fetch("http://ai:4001/join?id=" + room.id, {
+      method: "POST",
+    });
     if (!res.ok) throw new Error("ai not found");
     const txt = await res.text();
     if (txt !== "ok") throw new Error("ai not found");
