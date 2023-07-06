@@ -21,6 +21,7 @@
     "tailwind-merge": "^1.13.2"
   },
   "devDependencies": {
+    "@types/node": "^20.4.0",
     "@types/react": "^17.0.62",
     "@types/react-dom": "^17.0.20",
     "autoprefixer": "^10.4.14",
