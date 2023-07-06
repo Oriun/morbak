@@ -9,8 +9,8 @@ export function arrayUpdate<T>(array: T[], payload: ArrayUpdate<T>) {
             }
         }
     }
-    if (payload.create) {
-        array.push(payload.create);
+    if (payload.hasOwnProperty("create")) {
+        array.push(payload.create!);
     }
 
     if (payload.update) {

@@ -12,4 +12,4 @@ export interface BoardAction {
   image: string;
 }
 
-export type Move = [BoardAction, Socket, User]
+export type Move = [BoardAction|null, Socket, User]

@@ -114,7 +114,7 @@ const LobbyView: React.FunctionComponent<ILobbyViewProps> = (props) => {
   return (
     <section className="w-96 max-w-[90vw] flex flex-col items-stretch">
       <div className="flex items-center flex-col gap-3 mb-6">
-        <h2 className="text-xl">Room</h2>
+        <h2 className="text-xl">Lobby</h2>
         <h4 className="text-lg">En attente d'autres joueurs</h4>
         <Button className="flex items-center" onClick={copyRoomId}>
           {room.id} <ClipboardIcon className="w-4 h-4 text-indigo-dye ml-3" />

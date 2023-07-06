@@ -111,3 +111,9 @@ export async function play(row: number, col: number) {
     throw new Error("Can't play this move");
   }
 }
+export async function playNull() {
+  const res = await ask("play")("null");
+  if (!res || errors.includes(res) || res !== "success") {
+    throw new Error("Unexpected Error");
+  }
+}

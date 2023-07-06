@@ -22,8 +22,9 @@ export function createBoard(size: BoardSize) {
 }
 
 
-export function fillBoard(board: Board, actions: BoardAction[]) {
-  for (const { row, col, playerId } of actions) {
+export function fillBoard(board: Board, actions: (BoardAction | null)[]) {
+  const validActions = actions.filter((action): action is BoardAction => !!action);
+  for (const { row, col, playerId } of validActions) {
     board[row][col] = playerId;
   }
 }

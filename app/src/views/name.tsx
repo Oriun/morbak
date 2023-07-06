@@ -48,7 +48,7 @@ const NameView: React.FunctionComponent<INameViewProps> = (props) => {
   }
   return (
     <div className="flex flex-col gap-4 items-center w-full max-w-sm">
-      <h2 className="text-2xl font-semibold">Profil de jeux</h2>
+      <h2 className="text-2xl font-semibold">Profil de jeu</h2>
       <div className="relative">
         <img
           className="w-20 h-20 bg-rusty-red rounded-full border-solid border-2 border-white"

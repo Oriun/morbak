@@ -3,7 +3,7 @@ import * as Room from "../services/rooms.js";
 import * as User from "../services/user.js";
 import { checkWin, fillBoard } from "./board.js";
 import type { Server, Socket } from "socket.io";
-import { Move } from "../types/board.types.js";
+import { BoardAction, Move } from "../types/board.types.js";
 import { Subject, Subscription } from "rxjs";
 
 // for recovery
@@ -41,17 +41,14 @@ export async function instantiate(_room: RoomType, io: Server) {
     return function (data: string) {
       console.log("captureMove", { data });
       if (!user) return;
-      const { row, col } = JSON.parse(data);
-      moves$.next([
-        {
-          row,
-          col,
-          playerId: user.id,
-          image: user.avatar!,
-        },
-        socket,
-        user,
-      ] as Move);
+      let action: BoardAction | null;
+      if (data === "null") {
+        action = null;
+      } else {
+        const { row, col } = JSON.parse(data);
+        action = { row, col, playerId: user.id, image: user.avatar! };
+      }
+      moves$.next([action, socket, user] as Move);
     };
   }
 
@@ -65,27 +62,20 @@ export async function instantiate(_room: RoomType, io: Server) {
 
   for (const socket of sockets) {
     console.log("on play");
-    socket.on("play", captureMove(socket));
-    socket.once("quit",()=>{
-      aborted = true
-      subscription.unsubscribe()
-    })
-    socket.emit("game-started", JSON.stringify(room));
-    winnerNotificationPromise.then((id) => {
-      socket.emit("game-ended", id);
-      captureMap.delete(socket.id);
-    });
-    captureMap.set(socket.id, (sock) => {
-      sock.on("play", captureMove(sock));
-      socket.once("quit",()=>{
-        aborted = true
-        subscription.unsubscribe()
-      })
-      winnerNotificationPromise.then((id) => {
-        sock.emit("game-ended", id);
-        captureMap.delete(sock.id);
+
+    function registerSocket(socket: Socket) {
+      socket.on("play", captureMove(socket));
+      socket.once("quit", () => {
+        aborted = true;
+        subscription.unsubscribe();
       });
-    });
+      winnerNotificationPromise.then((id) => {
+        socket.emit("game-ended", id);
+        captureMap.delete(socket.id);
+      });
+    }
+    registerSocket(socket);
+    captureMap.set(socket.id, registerSocket);
   }
 
   while (!aborted && !checkWin(board, winLength)) {
@@ -95,20 +85,23 @@ export async function instantiate(_room: RoomType, io: Server) {
         console.log("move", { action, user });
         const currentPlayer = getCurrentPlayer(room);
 
-        console.log({ currentPlayer, playerId: action.playerId });
-        if (action.playerId !== currentPlayer) {
+        if (user.id !== currentPlayer) {
           return socket.emit("play", "not-your-turn");
         }
 
-        const { row, col } = action;
-        const lastMoves = room.history.slice(-room.winLength);
-        if (lastMoves.find((move) => move?.row === row && move?.col === col)) {
-          return socket.emit("play", "too-early");
+        if (action !== null) {
+          const { row, col } = action;
+          const lastMoves = room.history.slice(-room.winLength - 1);
+          if (
+            lastMoves.find((move) => move?.row === row && move?.col === col)
+          ) {
+            return socket.emit("play", "too-early");
+          }
+
+          console.log("move accepted");
+
+          fillBoard(board, [action]);
         }
-
-        console.log("move accepted");
-
-        fillBoard(board, [action]);
 
         Object.assign(
           room,
@@ -127,7 +120,7 @@ export async function instantiate(_room: RoomType, io: Server) {
 
         r();
       });
-      subscription.add(r)
+      subscription.add(r);
     });
     subscription!.unsubscribe();
   }

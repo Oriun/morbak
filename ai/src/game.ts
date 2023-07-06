@@ -10,7 +10,7 @@ export function getAvailableMoves(
   history: (BoardAction|null)[]
 ) {
   const moves: Omit<BoardAction, "playerId">[] = [];
-  const lockedMoves = history.slice(-winLength).filter(Boolean) as BoardAction[];
+  const lockedMoves = history.slice(-winLength - 1).filter(Boolean) as BoardAction[];
   for (let row = 0; row < board.length; row++) {
     for (let col = 0; col < board[row].length; col++) {
       const isLocked = lockedMoves.some(

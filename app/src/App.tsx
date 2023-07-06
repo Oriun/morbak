@@ -9,6 +9,7 @@ import NameView from "./views/name";
 import MainLayout from "./layouts/main";
 import { Provider } from "./contexts/main";
 import GameView from "./views/game";
+import Rules from "./views/rules";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
             <Route path="/create" element={<CreateView />} />
             <Route path="/lobby" element={<LobbyView />} />
             <Route path="/game" element={<GameView />} />
+            <Route path="/rules" element={<Rules />} />
           </Routes>
         </MainLayout>
       </Provider>

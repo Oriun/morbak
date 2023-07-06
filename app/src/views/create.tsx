@@ -13,8 +13,7 @@ interface ICreateViewProps {}
 const CreateView: React.FunctionComponent<ICreateViewProps> = (props) => {
   const navigate = useNavigate();
   const { update } = useMainContext();
-  const size = useInput<HTMLSelectElement>("6x6");
-  const winLength = useInput<HTMLInputElement, number>(5);
+  const size = useInput<HTMLSelectElement>("4x4");
   const timer = useInput<HTMLInputElement, number>(5);
   const toast = useToast();
 
@@ -22,9 +21,10 @@ const CreateView: React.FunctionComponent<ICreateViewProps> = (props) => {
     e.preventDefault();
     console.log("submit");
     try {
+      const sizes = size.value.split("x").map((a) => parseInt(a)) as [number, number]
       const room = await createRoom(
-        size.value.split("x").map((a) => parseInt(a)) as [number, number],
-        winLength.value,
+        sizes,
+        sizes[0],
         timer.value
       );
       update((state) => ({
@@ -49,20 +49,9 @@ const CreateView: React.FunctionComponent<ICreateViewProps> = (props) => {
       <h4 className="text-lg font-medium">Taille de la grille</h4>
       <select {...size} className="h-10 text-black px-4 w-full mb-4">
         <option value="4x4">4 x 4</option>
+        <option value="5x5">5 x 5</option>
         <option value="6x6">6 x 6</option>
-        <option value="8x8">8 x 8</option>
       </select>
-      <h4 className="text-lg font-medium">Condition de victoire</h4>
-      <div className="w-full mb-4">
-        <Input
-          type="number"
-          min={3}
-          max={8}
-          className="w-16 mr-4"
-          {...winLength}
-        />
-        <span>symbols consécutifs</span>
-      </div>
       <h4 className="text-lg font-medium">Timer (secondes)</h4>
       <Input
         type="number"

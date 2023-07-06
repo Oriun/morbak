@@ -28,7 +28,7 @@ const SelectView: React.FunctionComponent<ISelectViewProps> = (props) => {
       });
     } catch (e) {
       toast({
-        title: "Erreur lors de la connexion à la room",
+        title: "Erreur lors de la connexion au lobby",
         description: e,
         status: "error",
         duration: 9000,
@@ -45,7 +45,7 @@ const SelectView: React.FunctionComponent<ISelectViewProps> = (props) => {
   return (
     <div className="flex flex-col gap-4 items-center w-full max-w-sm">
       <h2 className="text-2xl font-semibold">Rejoindre</h2>
-      <Input placeholder="Session ID" {...roomId} />
+      <Input placeholder="ID de session" {...roomId} />
       <Button onClick={join} className="w-full">
         Rejoindre
       </Button>
@@ -54,6 +54,10 @@ const SelectView: React.FunctionComponent<ISelectViewProps> = (props) => {
       <Button onClick={() => navigate("/create")} className="w-full">
         Créer une partie
       </Button>
+
+      <a target="_blank" href="/rules" className="text-white">
+        Qu'est-ce que le morbak ?
+      </a>
     </div>
   );
 };

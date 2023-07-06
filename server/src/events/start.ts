@@ -15,7 +15,7 @@ export async function start(socket: Socket, io: Server, userId: string) {
         return;
     }
 
-    const room = Room.findUnique(user.currentRoom);
+    let room = Room.findUnique(user.currentRoom);
     if (!room) {
         socket.emit("start", "room-not-found")
         return;
@@ -30,13 +30,14 @@ export async function start(socket: Socket, io: Server, userId: string) {
     }
 
 
-    Room.update(room.id, {
+    room = Room.update(room.id, {
         started: true,
         startedAt: Date.now(),
     })
 
     socket.emit("start", "success");
-    socket.broadcast.to(room.id).emit("game-started", JSON.stringify(room));
-
+    
     instantiate(room, io);
+    socket.emit("game-started", JSON.stringify(room));
+    socket.to(room.id).emit("game-started", JSON.stringify(room));
 }
