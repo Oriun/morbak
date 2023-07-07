@@ -5,13 +5,13 @@ import cors from "cors";
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
-const client = path.join(__dirname, "../../../app/dist");
+const client = path.join(__dirname, "../../app/dist");
 const app = express();
 const server = http.createServer(app);
 
 app.use(cors());
 
-app.use(express.static(path.join(__dirname, "../../../app/dist")));
+app.use(express.static(path.join(__dirname, "../../app/dist")));
 
 // log all request 
 app.use((req, res, next) => {
